@@ -2,17 +2,14 @@ package ru.tsvlad.wayd_user.data.entity;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 public class UserEntity {
     @Id
@@ -24,6 +21,14 @@ public class UserEntity {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")}
+    )
+    private List<RoleEntity> roles;
 
     @Override
     public boolean equals(Object o) {

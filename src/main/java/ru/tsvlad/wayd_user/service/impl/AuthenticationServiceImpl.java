@@ -3,6 +3,7 @@ package ru.tsvlad.wayd_user.service.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.tsvlad.wayd_user.controller.advise.exceptions.UnsuccessfulLoginException;
 import ru.tsvlad.wayd_user.data.dto.UsernamePasswordDTO;
 import ru.tsvlad.wayd_user.data.entity.UserEntity;
@@ -18,6 +19,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public String loginAndGetToken(UsernamePasswordDTO usernamePasswordDTO) {
         UserEntity user = userRepository.findByUsername(usernamePasswordDTO.getUsername());
         if (user == null || usernamePasswordDTO.getPassword() == null) {
