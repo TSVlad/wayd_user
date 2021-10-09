@@ -12,6 +12,7 @@ import ru.tsvlad.wayd_user.data.dto.JwtPayload;
 import ru.tsvlad.wayd_user.data.entity.UserEntity;
 import ru.tsvlad.wayd_user.service.JwtService;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
@@ -19,8 +20,10 @@ import java.time.temporal.ChronoUnit;
 @Slf4j
 public class JwtServiceImpl implements JwtService {
 
-    @Value("jwt.secret")
+    @Value("${jwt.secret}")
     private String jwtSecret;
+    @Value("${jwt.prefix}")
+    private String prefix;
 
     private final ObjectMapper objectMapper;
 
@@ -43,7 +46,7 @@ public class JwtServiceImpl implements JwtService {
             payloadStr = "";
         }
 
-        return Jwts.builder()
+        return prefix + " " + Jwts.builder()
                 .setPayload(payloadStr)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();

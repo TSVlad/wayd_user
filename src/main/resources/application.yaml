@@ -17,6 +17,8 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:9999/eureka/
+    enabled: false
 
 jwt:
   secret: very-secret-key
+  prefix: Bearer
