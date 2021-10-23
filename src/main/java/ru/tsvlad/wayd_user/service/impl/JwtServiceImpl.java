@@ -12,7 +12,6 @@ import ru.tsvlad.wayd_user.data.dto.JwtPayload;
 import ru.tsvlad.wayd_user.data.entity.UserEntity;
 import ru.tsvlad.wayd_user.service.JwtService;
 
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
