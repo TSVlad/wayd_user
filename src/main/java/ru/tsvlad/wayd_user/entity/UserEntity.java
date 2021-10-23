@@ -30,6 +30,12 @@ public class UserEntity {
     )
     private List<RoleEntity> roles;
 
+    @Column(name = "contacts")
+    private String contacts;
+
+    @Column(name = "email")
+    private String email;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
