@@ -1,6 +1,10 @@
 package ru.tsvlad.wayd_user.entity;
 
 import lombok.*;
+import ru.tsvlad.wayd_user.restapi.dto.UserDTO;
+import ru.tsvlad.wayd_user.restapi.dto.UserForUpdateDTO;
+import ru.tsvlad.wayd_user.utils.MappingUtils;
+import ru.tsvlad.wayd_user.utils.PasswordEncodeUtils;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,6 +18,7 @@ import java.util.Objects;
 public class UserEntity {
     @Id
     @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "username", nullable = false)
@@ -47,5 +52,16 @@ public class UserEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, username, password);
+    }
+
+    public static UserEntity registerUser(UserDTO userDTO) {
+        UserEntity result = MappingUtils.map(userDTO, UserEntity.class);
+        result.setPassword(PasswordEncodeUtils.encodePassword(result.password));
+        return result;
+    }
+
+    public void updateUser(UserForUpdateDTO user) {
+        this.contacts = user.getContacts();
+        this.username = user.getUsername();
     }
 }
