@@ -1,4 +1,4 @@
-package ru.tsvlad.wayd_user.data.dto;
+package ru.tsvlad.wayd_user.restapi.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

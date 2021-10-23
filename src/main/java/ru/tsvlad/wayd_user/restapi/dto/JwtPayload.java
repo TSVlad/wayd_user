@@ -1,12 +1,11 @@
-package ru.tsvlad.wayd_user.data.dto;
+package ru.tsvlad.wayd_user.restapi.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-import ru.tsvlad.wayd_user.data.entity.RoleEntity;
-import ru.tsvlad.wayd_user.data.entity.UserEntity;
+import ru.tsvlad.wayd_user.entity.RoleEntity;
+import ru.tsvlad.wayd_user.entity.UserEntity;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 

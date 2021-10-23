@@ -1,4 +1,4 @@
-package ru.tsvlad.wayd_user.data.entity;
+package ru.tsvlad.wayd_user.entity;
 
 import lombok.*;
 

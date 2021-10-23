@@ -8,8 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.tsvlad.wayd_user.data.dto.JwtPayload;
-import ru.tsvlad.wayd_user.data.entity.UserEntity;
+import ru.tsvlad.wayd_user.restapi.dto.JwtPayload;
+import ru.tsvlad.wayd_user.entity.UserEntity;
 import ru.tsvlad.wayd_user.service.JwtService;
 
 import java.time.LocalDate;

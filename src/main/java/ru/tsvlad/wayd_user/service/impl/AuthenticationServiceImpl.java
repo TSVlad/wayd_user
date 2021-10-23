@@ -1,18 +1,15 @@
 package ru.tsvlad.wayd_user.service.impl;
 
-import io.jsonwebtoken.*;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.tsvlad.wayd_user.controller.advise.exceptions.UnsuccessfulLoginException;
-import ru.tsvlad.wayd_user.data.dto.UsernamePasswordDTO;
-import ru.tsvlad.wayd_user.data.entity.UserEntity;
+import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.UnsuccessfulLoginException;
+import ru.tsvlad.wayd_user.restapi.dto.UsernamePasswordDTO;
+import ru.tsvlad.wayd_user.entity.UserEntity;
 import ru.tsvlad.wayd_user.repo.UserRepository;
 import ru.tsvlad.wayd_user.service.AuthenticationService;
 import ru.tsvlad.wayd_user.service.JwtService;
-
-import java.nio.charset.StandardCharsets;
 
 @Service
 @AllArgsConstructor

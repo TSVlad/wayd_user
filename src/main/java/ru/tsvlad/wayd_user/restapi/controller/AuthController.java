@@ -1,4 +1,4 @@
-package ru.tsvlad.wayd_user.controller;
+package ru.tsvlad.wayd_user.restapi.controller;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.tsvlad.wayd_user.data.dto.UsernamePasswordDTO;
+import ru.tsvlad.wayd_user.restapi.dto.UsernamePasswordDTO;
 import ru.tsvlad.wayd_user.service.AuthenticationService;
 
 @RestController
