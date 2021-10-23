@@ -22,3 +22,10 @@ eureka:
 jwt:
   secret: very-secret-key
   prefix: Bearer
+
+wayd:
+  kafka:
+    address: localhost:9092
+    groupId: validator
+    producer:
+      id: validator-producer

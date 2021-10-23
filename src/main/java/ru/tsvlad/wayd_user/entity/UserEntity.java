@@ -41,6 +41,9 @@ public class UserEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "valid_bad_words")
+    private boolean isValidBadWords;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
