@@ -29,3 +29,6 @@ wayd:
     groupId: validator
     producer:
       id: validator-producer
+  confirmation-code:
+    duration: 15
+    length: 6

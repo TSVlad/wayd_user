@@ -63,6 +63,7 @@ public class UserEntity {
 
     public static UserEntity registerUser(UserDTO userDTO) {
         UserEntity result = MappingUtils.map(userDTO, UserEntity.class);
+        result.setStatus(UserStatus.NOT_APPROVED_EMAIL);
         result.setPassword(PasswordEncodeUtils.encodePassword(result.password));
         return result;
     }
@@ -70,5 +71,6 @@ public class UserEntity {
     public void updateUser(UserForUpdateDTO user) {
         this.contacts = user.getContacts();
         this.username = user.getUsername();
+        this.setStatus(UserStatus.ON_VALIDATION);
     }
 }
