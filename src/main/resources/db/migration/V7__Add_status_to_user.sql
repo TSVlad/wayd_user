@@ -1,0 +1,9 @@
+ALTER TABLE users
+ADD COLUMN status TEXT;
+
+UPDATE users
+SET status = 'ACTIVE'
+WHERE id IN (1, 2, 3);
+
+ALTER TABLE users
+ALTER COLUMN status SET NOT NULL;

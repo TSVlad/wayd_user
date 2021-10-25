@@ -1,6 +1,7 @@
 package ru.tsvlad.wayd_user.entity;
 
 import lombok.*;
+import ru.tsvlad.wayd_user.enums.UserStatus;
 import ru.tsvlad.wayd_user.restapi.dto.UserDTO;
 import ru.tsvlad.wayd_user.restapi.dto.UserForUpdateDTO;
 import ru.tsvlad.wayd_user.utils.MappingUtils;
@@ -43,6 +44,9 @@ public class UserEntity {
 
     @Column(name = "valid_bad_words")
     private boolean isValidBadWords;
+
+    @Column(name = "status")
+    private UserStatus status;
 
     @Override
     public boolean equals(Object o) {
