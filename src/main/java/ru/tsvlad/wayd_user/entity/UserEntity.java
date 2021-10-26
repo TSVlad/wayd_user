@@ -3,6 +3,7 @@ package ru.tsvlad.wayd_user.entity;
 import lombok.*;
 import ru.tsvlad.wayd_user.enums.Role;
 import ru.tsvlad.wayd_user.enums.UserStatus;
+import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.ForbiddenException;
 import ru.tsvlad.wayd_user.restapi.dto.UserDTO;
 import ru.tsvlad.wayd_user.restapi.dto.UserForRegisterDTO;
 import ru.tsvlad.wayd_user.restapi.dto.UserForUpdateDTO;

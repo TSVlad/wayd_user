@@ -8,7 +8,9 @@ import ru.tsvlad.wayd_user.entity.ConfirmationCodeEntity;
 import ru.tsvlad.wayd_user.messaging.dto.ConfirmationCodeDTO;
 import ru.tsvlad.wayd_user.messaging.producer.msg.UserMessage;
 import ru.tsvlad.wayd_user.messaging.producer.msg.UserMessageType;
+import ru.tsvlad.wayd_user.restapi.dto.UserDTO;
 import ru.tsvlad.wayd_user.restapi.dto.UserPublicDTO;
+import ru.tsvlad.wayd_user.restapi.dto.UserWithoutPasswordDTO;
 import ru.tsvlad.wayd_user.utils.MappingUtils;
 
 @Service
@@ -16,14 +18,14 @@ import ru.tsvlad.wayd_user.utils.MappingUtils;
 public class UserServiceProducer {
     private final KafkaTemplate<Long, UserMessage> userMessageKafkaTemplate;
 
-    public void registerAccount(UserPublicDTO userDTO) {
+    public void registerAccount(UserWithoutPasswordDTO userDTO) {
         send(UserMessage.builder()
                 .type(UserMessageType.CREATED)
                 .userDTO(userDTO)
                 .build());
     }
 
-    public void updateAccount(UserPublicDTO userPublicDTO) {
+    public void updateAccount(UserWithoutPasswordDTO userPublicDTO) {
         send(UserMessage.builder()
                 .type(UserMessageType.UPDATED)
                 .userDTO(userPublicDTO)

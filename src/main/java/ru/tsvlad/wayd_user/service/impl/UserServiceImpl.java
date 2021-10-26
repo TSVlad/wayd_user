@@ -10,6 +10,8 @@ import ru.tsvlad.wayd_user.messaging.producer.UserServiceProducer;
 import ru.tsvlad.wayd_user.repo.ConfirmationCodeRepository;
 import ru.tsvlad.wayd_user.repo.UserRepository;
 import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.EmailAlreadyExistsException;
+import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.ForbiddenException;
+import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.NotFoundException;
 import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.UsernameAlreadyExistsException;
 import ru.tsvlad.wayd_user.restapi.dto.*;
 import ru.tsvlad.wayd_user.service.ConfirmationCodeService;
@@ -77,18 +79,25 @@ public class UserServiceImpl implements UserService {
     public UserForOwnerDTO updateUser(UserForUpdateDTO userDTO) {
         Optional<UserEntity> userEntityOptional = userRepository.findById(userDTO.getId());
         if (userEntityOptional.isEmpty()) {
-            throw new RuntimeException();
+            throw new NotFoundException();
         }
         UserEntity userEntity = userEntityOptional.get();
+
+        if (userEntity.getStatus() == UserStatus.NOT_APPROVED_EMAIL
+                || userEntity.getStatus() == UserStatus.NOT_APPROVED_BY_MODERATOR) {
+            throw new ForbiddenException();
+        }
+
         userEntity.updateUser(userDTO);
         UserEntity result = userRepository.save(userEntity);
-        userServiceProducer.updateAccount(MappingUtils.map(result, UserPublicDTO.class));
+        userServiceProducer.updateAccount(MappingUtils.map(result, UserWithoutPasswordDTO.class));
         return MappingUtils.map(result, UserForOwnerDTO.class);
     }
 
     @Override
     @Transactional
     public void updateValidBadWords(long id, boolean isValid) {
+        System.out.println("VALIDATOR");
         try {
             Optional<UserEntity> userEntityOptional = userRepository.findById(id);
             if (userEntityOptional.isEmpty()) {
