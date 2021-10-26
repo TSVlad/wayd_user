@@ -3,11 +3,9 @@ package ru.tsvlad.wayd_user.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ru.tsvlad.wayd_user.enums.Role;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
@@ -21,7 +19,8 @@ public class RoleEntity {
     private long id;
 
     @Column(name = "name")
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private Role name;
 
     @Override
     public boolean equals(Object o) {

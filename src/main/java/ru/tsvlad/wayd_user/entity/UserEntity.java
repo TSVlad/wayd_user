@@ -1,13 +1,17 @@
 package ru.tsvlad.wayd_user.entity;
 
 import lombok.*;
+import ru.tsvlad.wayd_user.enums.Role;
 import ru.tsvlad.wayd_user.enums.UserStatus;
 import ru.tsvlad.wayd_user.restapi.dto.UserDTO;
+import ru.tsvlad.wayd_user.restapi.dto.UserForRegisterDTO;
 import ru.tsvlad.wayd_user.restapi.dto.UserForUpdateDTO;
+import ru.tsvlad.wayd_user.service.RoleService;
 import ru.tsvlad.wayd_user.utils.MappingUtils;
 import ru.tsvlad.wayd_user.utils.PasswordEncodeUtils;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -61,8 +65,15 @@ public class UserEntity {
         return Objects.hash(id, username, password);
     }
 
-    public static UserEntity registerUser(UserDTO userDTO) {
+    public static UserEntity registerUser(UserForRegisterDTO userDTO, RoleService roleService) {
         UserEntity result = MappingUtils.map(userDTO, UserEntity.class);
+
+        List<RoleEntity> roles = new ArrayList<>();
+        roles.add(roleService.getRoleEntityByName(Role.ROLE_USER));
+        roles.add(userDTO.isOrganization() ?
+                roleService.getRoleEntityByName(Role.ROLE_ORGANIZATION)
+                : roleService.getRoleEntityByName(Role.ROLE_PERSON));
+        result.setRoles(roles);
         result.setStatus(UserStatus.NOT_APPROVED_EMAIL);
         result.setPassword(PasswordEncodeUtils.encodePassword(result.password));
         return result;

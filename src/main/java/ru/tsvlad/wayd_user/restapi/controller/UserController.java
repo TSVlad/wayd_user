@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.tsvlad.wayd_user.restapi.dto.UserDTO;
 import ru.tsvlad.wayd_user.restapi.dto.UserForOwnerDTO;
+import ru.tsvlad.wayd_user.restapi.dto.UserForRegisterDTO;
 import ru.tsvlad.wayd_user.restapi.dto.UserForUpdateDTO;
 import ru.tsvlad.wayd_user.service.UserService;
 
@@ -16,7 +17,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserForOwnerDTO> registerUser(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<UserForOwnerDTO> registerUser(@RequestBody UserForRegisterDTO userDTO) {
         return ResponseEntity.ok(userService.registerUser(userDTO));
     }
 

@@ -11,11 +11,9 @@ import ru.tsvlad.wayd_user.repo.ConfirmationCodeRepository;
 import ru.tsvlad.wayd_user.repo.UserRepository;
 import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.EmailAlreadyExistsException;
 import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.UsernameAlreadyExistsException;
-import ru.tsvlad.wayd_user.restapi.dto.UserDTO;
-import ru.tsvlad.wayd_user.restapi.dto.UserForOwnerDTO;
-import ru.tsvlad.wayd_user.restapi.dto.UserForUpdateDTO;
-import ru.tsvlad.wayd_user.restapi.dto.UserPublicDTO;
+import ru.tsvlad.wayd_user.restapi.dto.*;
 import ru.tsvlad.wayd_user.service.ConfirmationCodeService;
+import ru.tsvlad.wayd_user.service.RoleService;
 import ru.tsvlad.wayd_user.service.UserService;
 import ru.tsvlad.wayd_user.utils.MappingUtils;
 
@@ -28,19 +26,20 @@ public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository;
     private ConfirmationCodeRepository confirmationCodeRepository;
+
     private UserServiceProducer userServiceProducer;
     private ConfirmationCodeService confirmationCodeService;
+    private RoleService roleService;
 
     @Override
     @Transactional
-    public UserForOwnerDTO registerUser(UserDTO userDTO) {
-        UserEntity userEntity = UserEntity.registerUser(userDTO);
+    public UserForOwnerDTO registerUser(UserForRegisterDTO userDTO) {
+        UserEntity userEntity = UserEntity.registerUser(userDTO, roleService);
 
         checkSameEmail(userEntity.getEmail());
         checkSameUsername(userEntity.getUsername());
 
         UserEntity result = userRepository.save(userEntity);
-//        userServiceProducer.registerAccount(MappingUtils.map(result, UserPublicDTO.class));
         confirmationCodeService.createConfirmationCodeForEmail(result.getEmail());
         return MappingUtils.map(result, UserForOwnerDTO.class);
     }

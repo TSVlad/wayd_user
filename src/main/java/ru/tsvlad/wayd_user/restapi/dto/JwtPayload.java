@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import ru.tsvlad.wayd_user.entity.RoleEntity;
 import ru.tsvlad.wayd_user.entity.UserEntity;
+import ru.tsvlad.wayd_user.enums.Role;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,7 +15,7 @@ public class JwtPayload {
     private String username;
     @JsonFormat(pattern = "YYYY-MM-dd")
     private LocalDate expiredAt;
-    private List<String> roles;
+    private List<Role> roles;
 
     public JwtPayload(UserEntity userEntity) {
         this.username = userEntity.getUsername();
