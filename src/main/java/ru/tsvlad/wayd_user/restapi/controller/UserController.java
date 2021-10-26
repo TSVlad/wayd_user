@@ -1,12 +1,10 @@
 package ru.tsvlad.wayd_user.restapi.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.tsvlad.wayd_user.restapi.dto.UserDTO;
-import ru.tsvlad.wayd_user.restapi.dto.UserForOwnerDTO;
-import ru.tsvlad.wayd_user.restapi.dto.UserForRegisterDTO;
-import ru.tsvlad.wayd_user.restapi.dto.UserForUpdateDTO;
+import ru.tsvlad.wayd_user.restapi.dto.*;
 import ru.tsvlad.wayd_user.service.UserService;
 
 @RestController
@@ -19,6 +17,12 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<UserForOwnerDTO> registerUser(@RequestBody UserForRegisterDTO userDTO) {
         return ResponseEntity.ok(userService.registerUser(userDTO));
+    }
+
+    @PostMapping("/confirm-email")
+    public ResponseEntity<HttpStatus> confirmEmail(@RequestBody  ConfirmationCodeDTO codeDTO) {
+        userService.confirmEmail(codeDTO);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping

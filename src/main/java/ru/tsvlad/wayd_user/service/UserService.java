@@ -1,12 +1,10 @@
 package ru.tsvlad.wayd_user.service;
 
-import ru.tsvlad.wayd_user.restapi.dto.UserDTO;
-import ru.tsvlad.wayd_user.restapi.dto.UserForOwnerDTO;
-import ru.tsvlad.wayd_user.restapi.dto.UserForRegisterDTO;
-import ru.tsvlad.wayd_user.restapi.dto.UserForUpdateDTO;
+import ru.tsvlad.wayd_user.restapi.dto.*;
 
 public interface UserService {
     UserForOwnerDTO registerUser(UserForRegisterDTO userDTO);
     UserForOwnerDTO updateUser(UserForUpdateDTO userDTO);
+    void confirmEmail(ConfirmationCodeDTO codeDTO);
     void updateValidBadWords(long id, boolean isValid);
 }

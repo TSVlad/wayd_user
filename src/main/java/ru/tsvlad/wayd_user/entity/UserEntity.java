@@ -86,4 +86,8 @@ public class UserEntity {
         this.username = user.getUsername();
         this.setStatus(UserStatus.ON_VALIDATION);
     }
+
+    public void confirmEmail() {
+        this.status = UserStatus.ON_VALIDATION;
+    }
 }

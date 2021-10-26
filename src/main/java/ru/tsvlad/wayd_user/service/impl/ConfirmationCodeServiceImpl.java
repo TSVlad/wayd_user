@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.tsvlad.wayd_user.entity.ConfirmationCodeEntity;
 import ru.tsvlad.wayd_user.messaging.producer.UserServiceProducer;
 import ru.tsvlad.wayd_user.repo.ConfirmationCodeRepository;
+import ru.tsvlad.wayd_user.restapi.dto.ConfirmationCodeDTO;
 import ru.tsvlad.wayd_user.service.ConfirmationCodeService;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,17 @@ public class ConfirmationCodeServiceImpl implements ConfirmationCodeService {
         ConfirmationCodeEntity codeEntity = generateCodeEntity(email);
         codeEntity = confirmationCodeRepository.save(codeEntity);
         userServiceProducer.createConfirmationCode(codeEntity);
+    }
+
+    @Override
+    public boolean confirm(ConfirmationCodeDTO codeDTO) {
+        boolean success = confirmationCodeRepository.findAllByEmailAndExpirationAfter(codeDTO.getEmail(),
+                LocalDateTime.now()).stream().anyMatch(codeEntity -> codeEntity.getCode().equals(codeDTO.getCode()));
+        if (!success) {
+            confirmationCodeRepository.deleteAllByEmail(codeDTO.getEmail());
+            createConfirmationCodeForEmail(codeDTO.getEmail());
+        }
+        return success;
     }
 
     private ConfirmationCodeEntity generateCodeEntity(String email) {

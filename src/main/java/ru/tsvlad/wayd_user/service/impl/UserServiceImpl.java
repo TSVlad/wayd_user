@@ -95,6 +95,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void confirmEmail(ConfirmationCodeDTO codeDTO) {
+        boolean success = confirmationCodeService.confirm(codeDTO);
+        if (success) {
+            UserEntity userEntity = userRepository.findByEmail(codeDTO.getEmail());
+            userEntity.confirmEmail();
+            userRepository.save(userEntity);
+            userServiceProducer.registerAccount(MappingUtils.map(userEntity, UserWithoutPasswordDTO.class));
+        }
+    }
+
+    @Override
     @Transactional
     public void updateValidBadWords(long id, boolean isValid) {
         System.out.println("VALIDATOR");

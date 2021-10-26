@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface ConfirmationCodeRepository extends CrudRepository<ConfirmationCodeEntity, Long> {
     List<ConfirmationCodeEntity> findAllByEmailAndExpirationAfter(String email, LocalDateTime expiration);
-
+    void deleteAllByEmail(String email);
 }
