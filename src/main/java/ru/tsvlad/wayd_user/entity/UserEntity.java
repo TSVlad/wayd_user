@@ -50,6 +50,7 @@ public class UserEntity {
     private boolean isValidBadWords;
 
     @Column(name = "status")
+    @Enumerated(EnumType.STRING)
     private UserStatus status;
 
     @Override
