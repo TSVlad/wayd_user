@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tsvlad.wayd_user.entity.UserEntity;
 import ru.tsvlad.wayd_user.enums.UserStatus;
+import ru.tsvlad.wayd_user.enums.Validity;
 import ru.tsvlad.wayd_user.messaging.producer.UserServiceProducer;
 import ru.tsvlad.wayd_user.repo.ConfirmationCodeRepository;
 import ru.tsvlad.wayd_user.repo.UserRepository;
@@ -107,7 +108,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void updateValidBadWords(long id, boolean isValid) {
+    public void updateValidBadWords(long id, Validity validity) {
         System.out.println("VALIDATOR");
         try {
             Optional<UserEntity> userEntityOptional = userRepository.findById(id);
@@ -115,10 +116,10 @@ public class UserServiceImpl implements UserService {
                 throw new RuntimeException();
             }
             UserEntity userEntity = userEntityOptional.get();
-            userEntity.setValidBadWords(isValid);
+            userEntity.updateValidBadWords(validity);
             userRepository.save(userEntity);
         } catch (OptimisticLockingFailureException exception) {
-            updateValidBadWords(id, isValid);
+            updateValidBadWords(id, validity);
         }
     }
 }

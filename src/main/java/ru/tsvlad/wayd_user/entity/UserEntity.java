@@ -3,6 +3,7 @@ package ru.tsvlad.wayd_user.entity;
 import lombok.*;
 import ru.tsvlad.wayd_user.enums.Role;
 import ru.tsvlad.wayd_user.enums.UserStatus;
+import ru.tsvlad.wayd_user.enums.Validity;
 import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.ForbiddenException;
 import ru.tsvlad.wayd_user.restapi.dto.UserDTO;
 import ru.tsvlad.wayd_user.restapi.dto.UserForRegisterDTO;
@@ -48,7 +49,8 @@ public class UserEntity {
     private String email;
 
     @Column(name = "valid_bad_words")
-    private boolean isValidBadWords;
+    @Enumerated(EnumType.STRING)
+    private Validity validityBadWords;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
@@ -78,6 +80,7 @@ public class UserEntity {
         result.setRoles(roles);
         result.setStatus(UserStatus.NOT_APPROVED_EMAIL);
         result.setPassword(PasswordEncodeUtils.encodePassword(result.password));
+        result.setValidityBadWords(Validity.NOT_VALIDATED);
         return result;
     }
 
@@ -89,5 +92,16 @@ public class UserEntity {
 
     public void confirmEmail() {
         this.status = UserStatus.ON_VALIDATION;
+    }
+
+    public void updateValidBadWords(Validity validity) {
+        this.validityBadWords = validity;
+        switch (validity) {
+            case NOT_VALID:
+                this.status = UserStatus.INVALID;
+                break;
+            case VALID:
+                this.status = UserStatus.ACTIVE;
+        }
     }
 }
