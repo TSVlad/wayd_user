@@ -6,4 +6,5 @@ import ru.tsvlad.wayd_user.enums.Role;
 
 public interface RoleService {
     RoleEntity getRoleEntityByName(Role name);
+    void addRoleToUser(Role role,long userId);
 }
