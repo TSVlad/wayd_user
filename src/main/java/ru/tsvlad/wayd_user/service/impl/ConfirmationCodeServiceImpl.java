@@ -35,6 +35,7 @@ public class ConfirmationCodeServiceImpl implements ConfirmationCodeService {
     }
 
     @Override
+    @Transactional
     public boolean confirm(ConfirmationCodeDTO codeDTO) {
         boolean success = confirmationCodeRepository.findAllByEmailAndExpirationAfter(codeDTO.getEmail(),
                 LocalDateTime.now()).stream().anyMatch(codeEntity -> codeEntity.getCode().equals(codeDTO.getCode()));

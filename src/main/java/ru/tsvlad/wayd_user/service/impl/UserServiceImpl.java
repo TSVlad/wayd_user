@@ -96,7 +96,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void confirmEmail(ConfirmationCodeDTO codeDTO) {
+    @Transactional
+    public boolean confirmEmail(ConfirmationCodeDTO codeDTO) {
         boolean success = confirmationCodeService.confirm(codeDTO);
         if (success) {
             UserEntity userEntity = userRepository.findByEmail(codeDTO.getEmail());
@@ -104,6 +105,7 @@ public class UserServiceImpl implements UserService {
             userRepository.save(userEntity);
             userServiceProducer.registerAccount(MappingUtils.map(userEntity, UserWithoutPasswordDTO.class));
         }
+        return success;
     }
 
     @Override
