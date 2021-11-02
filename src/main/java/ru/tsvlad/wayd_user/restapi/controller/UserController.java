@@ -14,6 +14,8 @@ import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.ForbiddenExcepti
 import ru.tsvlad.wayd_user.restapi.dto.*;
 import ru.tsvlad.wayd_user.service.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user")
 @AllArgsConstructor
@@ -45,5 +47,10 @@ public class UserController {
     public ResponseEntity<Page<UserPublicDTO>> getAllByUsername(@PathVariable String username, @PathVariable int pageNumber, @PathVariable int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return ResponseEntity.ok(userService.getAllByUsername(pageable, username));
+    }
+
+    @PostMapping("/by-ids")
+    public ResponseEntity<List<UserPublicDTO>> getAllByIds(@RequestBody List<Long> ids) {
+        return ResponseEntity.ok(userService.getAllById(ids));
     }
 }

@@ -23,7 +23,9 @@ import ru.tsvlad.wayd_user.service.UserService;
 import ru.tsvlad.wayd_user.utils.MappingUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -39,6 +41,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Page<UserPublicDTO> getAllByUsername(Pageable pageable, String str) {
         return userRepository.findAllByUsernameLikeAndStatus(pageable,  "%" + str + "%", UserStatus.ACTIVE).map(entity -> MappingUtils.map(entity, UserPublicDTO.class));
+    }
+
+    @Override
+    public List<UserPublicDTO> getAllById(List<Long> ids) {
+        return userRepository.findAllById(ids).stream().map(userEntity -> MappingUtils.map(userEntity, UserPublicDTO.class)).collect(Collectors.toList());
     }
 
     @Override
