@@ -111,7 +111,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public void updateValidBadWords(long id, Validity validity) {
-        System.out.println("VALIDATOR");
         try {
             Optional<UserEntity> userEntityOptional = userRepository.findById(id);
             if (userEntityOptional.isEmpty()) {
