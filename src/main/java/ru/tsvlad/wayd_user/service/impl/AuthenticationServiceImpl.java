@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.NotFoundException;
 import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.UnsuccessfulLoginException;
+import ru.tsvlad.wayd_user.restapi.dto.JwtPayload;
 import ru.tsvlad.wayd_user.restapi.dto.UsernamePasswordDTO;
 import ru.tsvlad.wayd_user.entity.UserEntity;
 import ru.tsvlad.wayd_user.repo.UserRepository;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
-    private final JwtService jwtService;
+    private final JwtService<JwtPayload> jwtService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 

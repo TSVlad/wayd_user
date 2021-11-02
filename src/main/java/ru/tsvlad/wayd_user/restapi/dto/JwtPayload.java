@@ -17,6 +17,8 @@ public class JwtPayload {
     private long id;
     private String username;
     @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate dateOfBirth;
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate expiredAt;
     private List<Role> roles;
 
@@ -26,5 +28,6 @@ public class JwtPayload {
                 .map(RoleEntity::getName)
                 .collect(Collectors.toList());
         this.id = userEntity.getId();
+        this.dateOfBirth = userEntity.getDateOfBirth();
     }
 }
