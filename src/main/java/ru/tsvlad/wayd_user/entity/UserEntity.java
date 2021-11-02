@@ -45,6 +45,9 @@ public class UserEntity {
     )
     private List<RoleEntity> roles;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "contacts")
     private String contacts;
 
@@ -93,6 +96,7 @@ public class UserEntity {
     public void updateUser(UserForUpdateDTO user) {
         this.contacts = user.getContacts();
         this.username = user.getUsername();
+        this.description = user.getDescription();
         this.status = UserStatus.ON_VALIDATION;
         this.validityBadWords = Validity.NOT_VALIDATED;
     }

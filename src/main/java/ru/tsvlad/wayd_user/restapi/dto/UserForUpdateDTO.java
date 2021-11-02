@@ -7,4 +7,5 @@ public class UserForUpdateDTO {
     private long id;
     private String username;
     private String contacts;
+    private String description;
 }

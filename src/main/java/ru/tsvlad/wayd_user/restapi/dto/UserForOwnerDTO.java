@@ -10,6 +10,7 @@ public class UserForOwnerDTO {
     private long id;
     private String username;
     private List<RoleEntity> roles;
+    private String description;
     private String contacts;
     private String email;
 }
