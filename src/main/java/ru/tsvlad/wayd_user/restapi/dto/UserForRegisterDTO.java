@@ -2,7 +2,7 @@ package ru.tsvlad.wayd_user.restapi.dto;
 
 import lombok.Data;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Data
 public class UserForRegisterDTO {
@@ -10,6 +10,7 @@ public class UserForRegisterDTO {
     private String password;
     private String contacts;
     private String email;
+    private LocalDate dateOfBirth;
 
     private boolean isOrganization;
 }

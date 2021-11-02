@@ -13,6 +13,8 @@ import ru.tsvlad.wayd_user.utils.MappingUtils;
 import ru.tsvlad.wayd_user.utils.PasswordEncodeUtils;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,6 +57,9 @@ public class UserEntity {
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private UserStatus status;
+
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
 
     @Override
     public boolean equals(Object o) {
