@@ -9,4 +9,8 @@ public class PasswordEncodeUtils {
     public static String encodePassword(String password) {
         return passwordEncoder.encode(password);
     }
+
+    public static boolean isRealPassword(String password, String hashedPassword) {
+        return passwordEncoder.matches(password, hashedPassword);
+    }
 }

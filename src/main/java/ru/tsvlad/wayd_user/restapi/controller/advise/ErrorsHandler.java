@@ -29,6 +29,11 @@ public class ErrorsHandler {
         return new ResponseEntity<>(getExceptionName(e), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = {InvalidPasswordException.class})
+    public ResponseEntity<String> handleInvalidPassword(Exception e) {
+        return new ResponseEntity<>(getExceptionName(e), HttpStatus.CONFLICT);
+    }
+
     private String getExceptionName(Exception e) {
         String [] exceptionWithPackages = e.getClass().getName().split("\\.");
         return exceptionWithPackages[exceptionWithPackages.length - 1];

@@ -5,6 +5,7 @@ import ru.tsvlad.wayd_user.enums.Role;
 import ru.tsvlad.wayd_user.enums.UserStatus;
 import ru.tsvlad.wayd_user.enums.Validity;
 import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.ForbiddenException;
+import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.InvalidPasswordException;
 import ru.tsvlad.wayd_user.restapi.dto.UserDTO;
 import ru.tsvlad.wayd_user.restapi.dto.UserForRegisterDTO;
 import ru.tsvlad.wayd_user.restapi.dto.UserForUpdateDTO;
@@ -109,5 +110,12 @@ public class UserEntity {
             case VALID:
                 this.status = UserStatus.ACTIVE;
         }
+    }
+
+    public void changePassword(String oldPassword, String newPassword) {
+        if (!PasswordEncodeUtils.isRealPassword(oldPassword, this.password)) {
+            throw new InvalidPasswordException();
+        }
+        this.setPassword(PasswordEncodeUtils.encodePassword(newPassword));
     }
 }

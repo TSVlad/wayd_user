@@ -4,5 +4,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import ru.tsvlad.wayd_user.restapi.dto.UsernamePasswordDTO;
 
 public interface AuthenticationService {
-    String loginAndGetToken(@RequestBody UsernamePasswordDTO usernamePasswordDTO);
+    String loginAndGetToken(UsernamePasswordDTO usernamePasswordDTO);
+    void changePassword(long id, String oldPassword, String newPassword);
 }
