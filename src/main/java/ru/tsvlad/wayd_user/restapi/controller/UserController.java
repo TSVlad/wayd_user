@@ -1,6 +1,11 @@
 package ru.tsvlad.wayd_user.restapi.controller;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.querydsl.QPageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -34,5 +39,11 @@ public class UserController {
             throw new ForbiddenException();
         }
         return ResponseEntity.ok(userService.updateUser(userForUpdateDTO));
+    }
+
+    @GetMapping("/for-username/{username}/{pageNumber}/{pageSize}")
+    public ResponseEntity<Page<UserPublicDTO>> getAllByUsername(@PathVariable String username, @PathVariable int pageNumber, @PathVariable int pageSize) {
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return ResponseEntity.ok(userService.getAllByUsername(pageable, username));
     }
 }

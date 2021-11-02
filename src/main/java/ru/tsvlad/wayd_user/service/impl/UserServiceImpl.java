@@ -2,6 +2,8 @@ package ru.tsvlad.wayd_user.service.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.dao.OptimisticLockingFailureException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tsvlad.wayd_user.entity.UserEntity;
@@ -33,6 +35,11 @@ public class UserServiceImpl implements UserService {
     private UserServiceProducer userServiceProducer;
     private ConfirmationCodeService confirmationCodeService;
     private RoleService roleService;
+
+    @Override
+    public Page<UserPublicDTO> getAllByUsername(Pageable pageable, String str) {
+        return userRepository.findAllByUsernameLikeAndStatus(pageable,  "%" + str + "%", UserStatus.ACTIVE).map(entity -> MappingUtils.map(entity, UserPublicDTO.class));
+    }
 
     @Override
     @Transactional
