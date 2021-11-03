@@ -18,4 +18,9 @@ public class EventServiceImpl implements EventService {
     public Page<String> getEventIdsForUser(Pageable pageable, long id) {
         return eventToUserRepository.findAllByUserId(pageable, id).map(EventToUserEntity::getEventId);
     }
+
+    @Override
+    public void saveEventToParticipants(EventToUserEntity eventToUserEntity) {
+        eventToUserRepository.save(eventToUserEntity);
+    }
 }
