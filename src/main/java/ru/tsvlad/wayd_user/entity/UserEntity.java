@@ -122,4 +122,12 @@ public class UserEntity {
         }
         this.setPassword(PasswordEncodeUtils.encodePassword(newPassword));
     }
+
+    public void ban() {
+        this.status = UserStatus.BANNED;
+    }
+
+    public void unban() {
+        this.status = UserStatus.ACTIVE;
+    }
 }

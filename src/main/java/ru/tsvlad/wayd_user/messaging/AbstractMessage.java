@@ -2,7 +2,10 @@ package ru.tsvlad.wayd_user.messaging;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.SuperBuilder;
+import net.bytebuddy.implementation.bind.annotation.Super;
 import ru.tsvlad.wayd_user.restapi.dto.JwtPayload;
 
 import java.io.Serializable;

@@ -49,6 +49,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserEntity getUserById(long id) {
+        Optional<UserEntity> userEntityOptional = userRepository.findById(id);
+        if (userEntityOptional.isEmpty()) {
+            throw new NotFoundException();
+        }
+        return userEntityOptional.get();
+    }
+
+    @Override
     @Transactional
     public UserForOwnerDTO registerUser(UserForRegisterDTO userDTO) {
         UserEntity userEntity = UserEntity.registerUser(userDTO, roleService);
@@ -128,7 +137,7 @@ public class UserServiceImpl implements UserService {
         try {
             Optional<UserEntity> userEntityOptional = userRepository.findById(id);
             if (userEntityOptional.isEmpty()) {
-                throw new RuntimeException();
+                throw new NotFoundException();
             }
             UserEntity userEntity = userEntityOptional.get();
             userEntity.updateValidBadWords(validity);
@@ -137,4 +146,20 @@ public class UserServiceImpl implements UserService {
             updateValidBadWords(id, validity);
         }
     }
+
+    @Override
+    public void banUser(long userId) {
+        UserEntity userEntity = getUserById(userId);
+        userEntity.ban();
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    public void unbanUser(long userId) {
+        UserEntity userEntity = getUserById(userId);
+        userEntity.unban();
+        userRepository.save(userEntity);
+    }
+
+
 }
