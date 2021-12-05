@@ -8,6 +8,8 @@ import java.time.LocalDate;
 public class UserForRegisterDTO {
     private String username;
     private String password;
+    private String name;
+    private String surname;
     private String description;
     private String contacts;
     private String email;

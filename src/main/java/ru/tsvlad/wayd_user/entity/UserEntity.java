@@ -43,6 +43,12 @@ public class UserEntity {
     )
     private Set<RoleEntity> roles;
 
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "surname")
+    private String surname;
+
     @Column(name = "description")
     private String description;
 
@@ -108,6 +114,8 @@ public class UserEntity {
     }
 
     public void updateUser(UserForUpdateDTO user) {
+        this.name = user.getName();
+        this.surname = user.getSurname();
         this.contacts = user.getContacts();
         this.username = user.getUsername();
         this.description = user.getDescription();

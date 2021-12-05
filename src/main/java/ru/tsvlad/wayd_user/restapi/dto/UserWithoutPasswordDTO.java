@@ -9,6 +9,8 @@ public class UserWithoutPasswordDTO {
     private long id;
     private String username;
     private List<RoleDTO> roles;
+    private String name;
+    private String surname;
     private String contacts;
     private String email;
 }

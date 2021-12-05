@@ -9,6 +9,8 @@ public class UserPublicDTO {
     private long id;
     private String username;
     private List<RoleDTO> roles;
+    private String name;
+    private String surname;
     private String description;
     private String contacts;
 }
