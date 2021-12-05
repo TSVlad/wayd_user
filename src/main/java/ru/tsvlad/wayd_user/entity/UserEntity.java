@@ -1,21 +1,21 @@
 package ru.tsvlad.wayd_user.entity;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.tsvlad.wayd_user.enums.Role;
 import ru.tsvlad.wayd_user.enums.UserStatus;
 import ru.tsvlad.wayd_user.enums.Validity;
-import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.ForbiddenException;
 import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.InvalidPasswordException;
-import ru.tsvlad.wayd_user.restapi.dto.UserDTO;
+import ru.tsvlad.wayd_user.restapi.dto.OrganizationForRegisterDTO;
 import ru.tsvlad.wayd_user.restapi.dto.UserForRegisterDTO;
 import ru.tsvlad.wayd_user.restapi.dto.UserForUpdateDTO;
 import ru.tsvlad.wayd_user.service.RoleService;
 import ru.tsvlad.wayd_user.utils.MappingUtils;
-import ru.tsvlad.wayd_user.utils.PasswordEncodeUtils;
+import ru.tsvlad.wayd_user.utils.PasswordUtils;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -83,13 +83,29 @@ public class UserEntity {
 
         List<RoleEntity> roles = new ArrayList<>();
         roles.add(roleService.getRoleEntityByName(Role.ROLE_USER));
-        roles.add(userDTO.isOrganization() ?
-                roleService.getRoleEntityByName(Role.ROLE_ORGANIZATION)
-                : roleService.getRoleEntityByName(Role.ROLE_PERSON));
+        roles.add(roleService.getRoleEntityByName(Role.ROLE_PERSON));
         result.setRoles(roles);
         result.setStatus(UserStatus.NOT_APPROVED_EMAIL);
-        result.setPassword(PasswordEncodeUtils.encodePassword(result.password));
+        result.setPassword(PasswordUtils.encodePassword(result.password));
         result.setValidityBadWords(Validity.NOT_VALIDATED);
+
+        return result;
+    }
+
+    public static UserEntity registerOrganization(OrganizationForRegisterDTO organizationForRegisterDTO, String password, RoleService roleService) {
+        UserEntity result = new UserEntity();
+        List<RoleEntity> roles = new ArrayList<>();
+        roles.add(roleService.getRoleEntityByName(Role.ROLE_USER));
+        roles.add(roleService.getRoleEntityByName(Role.ROLE_ORGANIZATION));
+        result.setRoles(roles);
+
+        result.setPassword(PasswordUtils.encodePassword(password));
+        result.setEmail(organizationForRegisterDTO.getEmail());
+        result.setUsername(organizationForRegisterDTO.getUsername());
+
+        result.setValidityBadWords(Validity.NOT_VALIDATED);
+        result.setStatus(UserStatus.ACTIVE);
+
         return result;
     }
 
@@ -117,10 +133,10 @@ public class UserEntity {
     }
 
     public void changePassword(String oldPassword, String newPassword) {
-        if (!PasswordEncodeUtils.isRealPassword(oldPassword, this.password)) {
+        if (!PasswordUtils.isRealPassword(oldPassword, this.password)) {
             throw new InvalidPasswordException();
         }
-        this.setPassword(PasswordEncodeUtils.encodePassword(newPassword));
+        this.setPassword(PasswordUtils.encodePassword(newPassword));
     }
 
     public void ban() {

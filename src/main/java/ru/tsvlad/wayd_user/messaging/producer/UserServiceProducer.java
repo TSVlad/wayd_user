@@ -1,15 +1,13 @@
 package ru.tsvlad.wayd_user.messaging.producer;
 
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import ru.tsvlad.wayd_user.entity.ConfirmationCodeEntity;
 import ru.tsvlad.wayd_user.messaging.dto.ConfirmationCodeDTO;
+import ru.tsvlad.wayd_user.messaging.dto.EmailCredentialsDTO;
 import ru.tsvlad.wayd_user.messaging.producer.msg.UserMessage;
 import ru.tsvlad.wayd_user.messaging.producer.msg.UserMessageType;
-import ru.tsvlad.wayd_user.restapi.dto.UserDTO;
-import ru.tsvlad.wayd_user.restapi.dto.UserPublicDTO;
 import ru.tsvlad.wayd_user.restapi.dto.UserWithoutPasswordDTO;
 import ru.tsvlad.wayd_user.utils.MappingUtils;
 
@@ -36,6 +34,13 @@ public class UserServiceProducer {
         send(UserMessage.builder()
                 .type(UserMessageType.CONFIRMATION_CODE_GENERATED)
                 .confirmationCodeDTO(MappingUtils.map(codeEntity, ConfirmationCodeDTO.class))
+                .build());
+    }
+
+    public void organizationRegistered(EmailCredentialsDTO emailCredentialsDTO) {
+        send(UserMessage.builder()
+                .type(UserMessageType.ORGANIZATION_REGISTERED)
+                .emailCredentialsDTO(emailCredentialsDTO)
                 .build());
     }
 

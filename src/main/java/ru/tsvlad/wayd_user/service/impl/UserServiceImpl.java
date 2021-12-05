@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.tsvlad.wayd_user.entity.UserEntity;
 import ru.tsvlad.wayd_user.enums.UserStatus;
 import ru.tsvlad.wayd_user.enums.Validity;
+import ru.tsvlad.wayd_user.messaging.dto.EmailCredentialsDTO;
 import ru.tsvlad.wayd_user.messaging.producer.UserServiceProducer;
 import ru.tsvlad.wayd_user.repo.ConfirmationCodeRepository;
 import ru.tsvlad.wayd_user.repo.UserRepository;
@@ -21,6 +22,7 @@ import ru.tsvlad.wayd_user.service.ConfirmationCodeService;
 import ru.tsvlad.wayd_user.service.RoleService;
 import ru.tsvlad.wayd_user.service.UserService;
 import ru.tsvlad.wayd_user.utils.MappingUtils;
+import ru.tsvlad.wayd_user.utils.PasswordUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<UserPublicDTO> getAllByUsername(Pageable pageable, String str) {
-        return userRepository.findAllByUsernameLikeAndStatus(pageable,  "%" + str + "%", UserStatus.ACTIVE).map(entity -> MappingUtils.map(entity, UserPublicDTO.class));
+        return userRepository.findAllByUsernameLikeAndStatus(pageable, "%" + str + "%", UserStatus.ACTIVE).map(entity -> MappingUtils.map(entity, UserPublicDTO.class));
     }
 
     @Override
@@ -68,6 +70,21 @@ public class UserServiceImpl implements UserService {
         UserEntity result = userRepository.save(userEntity);
         confirmationCodeService.createConfirmationCodeForEmail(result.getEmail());
         return MappingUtils.map(result, UserForOwnerDTO.class);
+    }
+
+    @Override
+    @Transactional
+    public UserDTO registerOrganization(OrganizationForRegisterDTO organizationForRegisterDTO) {
+        String password = PasswordUtils.generateRandomPassword(10);
+        UserEntity userEntity = UserEntity.registerOrganization(organizationForRegisterDTO, password, roleService);
+        UserEntity result = userRepository.save(userEntity);
+        userServiceProducer.organizationRegistered(EmailCredentialsDTO.builder()
+                .userId(result.getId())
+                .email(userEntity.getEmail())
+                .username(userEntity.getUsername())
+                .password(password)
+                .build());
+        return MappingUtils.map(result, UserDTO.class);
     }
 
     private void checkSameEmail(String email) {

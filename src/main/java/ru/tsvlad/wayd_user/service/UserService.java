@@ -2,7 +2,6 @@ package ru.tsvlad.wayd_user.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import reactor.core.publisher.Mono;
 import ru.tsvlad.wayd_user.entity.UserEntity;
 import ru.tsvlad.wayd_user.enums.Validity;
 import ru.tsvlad.wayd_user.restapi.dto.*;
@@ -15,6 +14,7 @@ public interface UserService {
     UserEntity getUserById(long id);
 
     UserForOwnerDTO registerUser(UserForRegisterDTO userDTO);
+    UserDTO registerOrganization(OrganizationForRegisterDTO organizationForRegisterDTO);
     UserForOwnerDTO updateUser(UserForUpdateDTO userDTO);
     boolean confirmEmail(ConfirmationCodeDTO codeDTO);
     void updateValidBadWords(long id, Validity validity);

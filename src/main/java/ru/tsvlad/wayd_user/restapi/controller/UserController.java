@@ -28,6 +28,11 @@ public class UserController {
         return ResponseEntity.ok(userService.registerUser(userDTO));
     }
 
+    @PostMapping("/register/organization")
+    public ResponseEntity<UserDTO> registerUser(@RequestBody OrganizationForRegisterDTO organizationForRegisterDTO) {
+        return ResponseEntity.ok(userService.registerOrganization(organizationForRegisterDTO));
+    }
+
     @PostMapping("/confirm-email")
     public ResponseEntity<Boolean> confirmEmail(@RequestBody  ConfirmationCodeDTO codeDTO) {
         return new ResponseEntity<>(userService.confirmEmail(codeDTO), HttpStatus.OK);
