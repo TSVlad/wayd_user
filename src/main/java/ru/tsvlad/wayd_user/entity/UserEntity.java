@@ -16,9 +16,7 @@ import ru.tsvlad.wayd_user.utils.PasswordUtils;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 @Table(name = "users")
@@ -43,7 +41,7 @@ public class UserEntity {
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id")}
     )
-    private List<RoleEntity> roles;
+    private Set<RoleEntity> roles;
 
     @Column(name = "description")
     private String description;
@@ -81,7 +79,7 @@ public class UserEntity {
     public static UserEntity registerUser(UserForRegisterDTO userDTO, RoleService roleService) {
         UserEntity result = MappingUtils.map(userDTO, UserEntity.class);
 
-        List<RoleEntity> roles = new ArrayList<>();
+        Set<RoleEntity> roles = new HashSet<>();
         roles.add(roleService.getRoleEntityByName(Role.ROLE_USER));
         roles.add(roleService.getRoleEntityByName(Role.ROLE_PERSON));
         result.setRoles(roles);
@@ -94,7 +92,7 @@ public class UserEntity {
 
     public static UserEntity registerOrganization(OrganizationForRegisterDTO organizationForRegisterDTO, String password, RoleService roleService) {
         UserEntity result = new UserEntity();
-        List<RoleEntity> roles = new ArrayList<>();
+        Set<RoleEntity> roles = new HashSet<>();
         roles.add(roleService.getRoleEntityByName(Role.ROLE_USER));
         roles.add(roleService.getRoleEntityByName(Role.ROLE_ORGANIZATION));
         result.setRoles(roles);

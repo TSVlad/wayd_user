@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.tsvlad.wayd_user.entity.UserEntity;
+import ru.tsvlad.wayd_user.enums.Role;
 import ru.tsvlad.wayd_user.enums.UserStatus;
 import ru.tsvlad.wayd_user.enums.Validity;
 import ru.tsvlad.wayd_user.messaging.dto.EmailCredentialsDTO;
@@ -165,6 +166,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void banUser(long userId) {
         UserEntity userEntity = getUserById(userId);
         userEntity.ban();
@@ -172,9 +174,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void unbanUser(long userId) {
         UserEntity userEntity = getUserById(userId);
         userEntity.unban();
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    @Transactional
+    public void addRoleToUser(long userId, Role role) {
+        UserEntity userEntity = getUserById(userId);
+        userEntity.getRoles().add(roleService.getRoleEntityByName(role));
+        userRepository.save(userEntity);
+    }
+
+    @Override
+    @Transactional
+    public void deleteRoleFromUser(long userId, Role role) {
+        UserEntity userEntity = getUserById(userId);
+        userEntity.getRoles().remove(roleService.getRoleEntityByName(role));
         userRepository.save(userEntity);
     }
 

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import ru.tsvlad.wayd_user.enums.Role;
 import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.ForbiddenException;
 import ru.tsvlad.wayd_user.restapi.dto.*;
 import ru.tsvlad.wayd_user.service.UserService;
@@ -57,5 +58,17 @@ public class UserController {
     @PostMapping("/by-ids")
     public ResponseEntity<List<UserPublicDTO>> getAllByIds(@RequestBody List<Long> ids) {
         return ResponseEntity.ok(userService.getAllById(ids));
+    }
+
+    @PostMapping("/{id}/role")
+    public ResponseEntity<HttpStatus> addRoleToUser(@PathVariable long id, @RequestBody Role role) {
+        userService.addRoleToUser(id, role);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}/role")
+    public ResponseEntity<HttpStatus> deleteRoleFromUser(@PathVariable long id, @RequestBody Role role) {
+        userService.deleteRoleFromUser(id, role);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
