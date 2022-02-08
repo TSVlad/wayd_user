@@ -1,9 +1,9 @@
-package ru.tsvlad.wayd_user.restapi.dto;
+package ru.tsvlad.wayd_user.commons;
 
 import lombok.Data;
 
 @Data
-public class UserForUpdateDTO {
+public class UserUpdateInfo {
     private String id;
     private String name;
     private String surname;

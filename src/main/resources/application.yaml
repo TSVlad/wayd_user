@@ -17,6 +17,15 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:9999/eureka/
+    enabled: false
+
+keycloak:
+  enabled: true
+  auth-server-url: http://localhost:8484/auth
+  realm: WAYD
+  resource: user-service
+  credentials:
+    secret: w2I3mMBLDlEZXEyKpwMq13i3adL7fz6j
 
 jwt:
   secret: very-secret-key

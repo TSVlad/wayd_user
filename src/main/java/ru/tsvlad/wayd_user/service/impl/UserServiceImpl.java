@@ -1,83 +1,70 @@
 package ru.tsvlad.wayd_user.service.impl;
 
 import lombok.AllArgsConstructor;
-import org.springframework.dao.OptimisticLockingFailureException;
+import org.keycloak.representations.idm.UserRepresentation;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.tsvlad.wayd_user.entity.UserEntity;
-import ru.tsvlad.wayd_user.enums.Role;
-import ru.tsvlad.wayd_user.enums.UserStatus;
-import ru.tsvlad.wayd_user.enums.Validity;
-import ru.tsvlad.wayd_user.messaging.dto.EmailCredentialsDTO;
+import ru.tsvlad.wayd_user.commons.OrganizationRegisterInfo;
+import ru.tsvlad.wayd_user.commons.User;
+import ru.tsvlad.wayd_user.commons.UserRegisterInfo;
+import ru.tsvlad.wayd_user.commons.UserUpdateInfo;
+import ru.tsvlad.wayd_user.commons.mapper.KeycloakMapper;
+import ru.tsvlad.wayd_user.messaging.dto.UserKafkaDTO;
 import ru.tsvlad.wayd_user.messaging.producer.UserServiceProducer;
-import ru.tsvlad.wayd_user.repo.ConfirmationCodeRepository;
-import ru.tsvlad.wayd_user.repo.UserRepository;
-import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.EmailAlreadyExistsException;
-import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.ForbiddenException;
-import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.NotFoundException;
-import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.UsernameAlreadyExistsException;
-import ru.tsvlad.wayd_user.restapi.dto.*;
-import ru.tsvlad.wayd_user.service.ConfirmationCodeService;
-import ru.tsvlad.wayd_user.service.RoleService;
+import ru.tsvlad.wayd_user.restapi.dto.UserPublicDTO;
+import ru.tsvlad.wayd_user.service.KeycloakService;
 import ru.tsvlad.wayd_user.service.UserService;
 import ru.tsvlad.wayd_user.utils.MappingUtils;
-import ru.tsvlad.wayd_user.utils.PasswordUtils;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
-    private ConfirmationCodeRepository confirmationCodeRepository;
-
     private UserServiceProducer userServiceProducer;
-    private ConfirmationCodeService confirmationCodeService;
-    private RoleService roleService;
+
+    private KeycloakService keycloakService;
+
+    private final ModelMapper modelMapper;
+    private final KeycloakMapper keycloakMapper;
 
     @Override
-    public Page<UserPublicDTO> getAllByUsername(Pageable pageable, String str) {
-        return userRepository.findAllByUsernameLikeAndStatus(pageable, "%" + str + "%", UserStatus.ACTIVE).map(entity -> MappingUtils.map(entity, UserPublicDTO.class));
+    public Page<User> getAllActiveByUsername(String username, int page, int size) {
+        return keycloakService.getUsersWithUsernameLike(username, page, size).map(keycloakMapper::toUser);
     }
 
     @Override
-    public List<UserPublicDTO> getAllById(List<Long> ids) {
-        return userRepository.findAllById(ids).stream().map(userEntity -> MappingUtils.map(userEntity, UserPublicDTO.class)).collect(Collectors.toList());
+    public List<User> getAllByIds(List<String> ids) {
+        return keycloakService.getUsersByIds(ids).stream().map(keycloakMapper::toUser).collect(Collectors.toList());
     }
 
     @Override
-    public UserEntity getUserById(long id) {
-        Optional<UserEntity> userEntityOptional = userRepository.findById(id);
-        if (userEntityOptional.isEmpty()) {
-            throw new NotFoundException();
-        }
-        return userEntityOptional.get();
-    }
-
-    @Override
-    @Transactional
-    public UserForOwnerDTO registerUser(UserForRegisterDTO userDTO) {
-        UserEntity userEntity = UserEntity.registerUser(userDTO, roleService);
-
-        checkSameEmail(userEntity.getEmail());
-        checkSameUsername(userEntity.getUsername());
-
-        UserEntity result = userRepository.save(userEntity);
-        confirmationCodeService.createConfirmationCodeForEmail(result.getEmail());
-        return MappingUtils.map(result, UserForOwnerDTO.class);
+    public User getUserById(String id) {
+        return keycloakMapper.toUser(keycloakService.getUserById(id));
     }
 
     @Override
     @Transactional
-    public UserDTO registerOrganization(OrganizationForRegisterDTO organizationForRegisterDTO) {
-        String password = PasswordUtils.generateRandomPassword(10);
-        UserEntity userEntity = UserEntity.registerOrganization(organizationForRegisterDTO, password, roleService);
+    public User registerUser(UserRegisterInfo userRegisterInfo) {
+        UserRepresentation userRepresentation = keycloakService.addUser(userRegisterInfo);
+        User result = keycloakMapper.toUser(userRepresentation);
+        userServiceProducer.registerAccount(modelMapper.map(result, UserKafkaDTO.class));
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public User registerOrganization(OrganizationRegisterInfo organizationRegisterInfo) {
+        UserRepresentation userRepresentation = keycloakService.addOrganization(organizationRegisterInfo);
+        User result = keycloakMapper.toUser(userRepresentation);
+        //TODO: producer
+        return result;
+
+        /*UserEntity userEntity = UserEntity.registerOrganization(organizationRegisterDTO, password, roleService);
         UserEntity result = userRepository.save(userEntity);
         userServiceProducer.organizationRegistered(EmailCredentialsDTO.builder()
                 .userId(result.getId())
@@ -85,41 +72,17 @@ public class UserServiceImpl implements UserService {
                 .username(userEntity.getUsername())
                 .password(password)
                 .build());
-        return MappingUtils.map(result, UserDTO.class);
-    }
-
-    private void checkSameEmail(String email) {
-        UserEntity existingUserWithSameEmail = userRepository.findByEmail(email);
-
-        if (existingUserWithSameEmail != null) {
-            if (existingUserWithSameEmail.getStatus() == UserStatus.NOT_APPROVED_EMAIL
-                    && confirmationCodeRepository.findAllByEmailAndExpirationAfter(existingUserWithSameEmail.getEmail(),
-                    LocalDateTime.now()).isEmpty()) {
-                userRepository.delete(existingUserWithSameEmail);
-            } else {
-                throw new EmailAlreadyExistsException();
-            }
-        }
-    }
-
-    private void checkSameUsername(String username) {
-        UserEntity existingUserWithSameUsername = userRepository.findByUsername(username);
-
-        if (existingUserWithSameUsername != null) {
-            if (existingUserWithSameUsername.getStatus() == UserStatus.NOT_APPROVED_EMAIL
-                    && confirmationCodeRepository.findAllByEmailAndExpirationAfter(existingUserWithSameUsername.getEmail(),
-                    LocalDateTime.now()).isEmpty()) {
-                userRepository.delete(existingUserWithSameUsername);
-            } else {
-                throw new UsernameAlreadyExistsException();
-            }
-        }
+        return MappingUtils.map(result, UserDTO.class);*/
     }
 
     @Override
     @Transactional
-    public UserForOwnerDTO updateUser(UserForUpdateDTO userDTO) {
-        Optional<UserEntity> userEntityOptional = userRepository.findById(userDTO.getId());
+    public User updateUser(UserUpdateInfo userUpdateInfo) {
+        UserRepresentation userRepresentation = keycloakService.updateUser(userUpdateInfo);
+        User user = keycloakMapper.toUser(userRepresentation);
+        return user;
+
+        /*Optional<UserEntity> userEntityOptional = userRepository.findById(userDTO.getId());
         if (userEntityOptional.isEmpty()) {
             throw new NotFoundException();
         }
@@ -132,11 +95,11 @@ public class UserServiceImpl implements UserService {
 
         userEntity.updateUser(userDTO);
         UserEntity result = userRepository.save(userEntity);
-        userServiceProducer.updateAccount(MappingUtils.map(result, UserWithoutPasswordDTO.class));
-        return MappingUtils.map(result, UserForOwnerDTO.class);
+        userServiceProducer.updateAccount(MappingUtils.map(result, UserKafkaDTO.class));
+        return MappingUtils.map(result, UserForOwnerDTO.class);*/
     }
 
-    @Override
+    /*@Override
     @Transactional
     public boolean confirmEmail(ConfirmationCodeDTO codeDTO) {
         boolean success = confirmationCodeService.confirm(codeDTO);
@@ -144,7 +107,7 @@ public class UserServiceImpl implements UserService {
             UserEntity userEntity = userRepository.findByEmail(codeDTO.getEmail());
             userEntity.confirmEmail();
             userRepository.save(userEntity);
-            userServiceProducer.registerAccount(MappingUtils.map(userEntity, UserWithoutPasswordDTO.class));
+
         }
         return success;
     }
@@ -196,6 +159,6 @@ public class UserServiceImpl implements UserService {
         userEntity.getRoles().remove(roleService.getRoleEntityByName(role));
         userRepository.save(userEntity);
     }
-
+*/
 
 }

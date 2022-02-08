@@ -4,7 +4,7 @@ import lombok.*;
 import ru.tsvlad.wayd_user.messaging.AbstractMessage;
 import ru.tsvlad.wayd_user.messaging.dto.ConfirmationCodeDTO;
 import ru.tsvlad.wayd_user.messaging.dto.EmailCredentialsDTO;
-import ru.tsvlad.wayd_user.restapi.dto.UserWithoutPasswordDTO;
+import ru.tsvlad.wayd_user.messaging.dto.UserKafkaDTO;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -13,7 +13,7 @@ import ru.tsvlad.wayd_user.restapi.dto.UserWithoutPasswordDTO;
 @Builder
 public class UserMessage extends AbstractMessage {
     private UserMessageType type;
-    private UserWithoutPasswordDTO userDTO;
+    private UserKafkaDTO userDTO;
     private ConfirmationCodeDTO confirmationCodeDTO;
     private EmailCredentialsDTO emailCredentialsDTO;
 }

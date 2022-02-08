@@ -25,10 +25,10 @@ public class ModerationConsumer {
     }
 
     private void ban(ModerationMessage message) {
-        userService.banUser(message.getBanDTO().getUserId());
+//        userService.banUser(message.getBanDTO().getUserId());
     }
 
     private void unban(ModerationMessage message) {
-        userService.unbanUser(message.getBanDTO().getUserId());
+//        userService.unbanUser(message.getBanDTO().getUserId());
     }
 }

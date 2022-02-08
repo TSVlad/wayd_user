@@ -1,41 +1,37 @@
 package ru.tsvlad.wayd_user.messaging.producer;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import ru.tsvlad.wayd_user.entity.ConfirmationCodeEntity;
 import ru.tsvlad.wayd_user.messaging.dto.ConfirmationCodeDTO;
 import ru.tsvlad.wayd_user.messaging.dto.EmailCredentialsDTO;
 import ru.tsvlad.wayd_user.messaging.producer.msg.UserMessage;
 import ru.tsvlad.wayd_user.messaging.producer.msg.UserMessageType;
-import ru.tsvlad.wayd_user.restapi.dto.UserWithoutPasswordDTO;
+import ru.tsvlad.wayd_user.messaging.dto.UserKafkaDTO;
 import ru.tsvlad.wayd_user.utils.MappingUtils;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class UserServiceProducer {
     private final KafkaTemplate<Long, UserMessage> userMessageKafkaTemplate;
 
-    public void registerAccount(UserWithoutPasswordDTO userDTO) {
-        send(UserMessage.builder()
+    public void registerAccount(UserKafkaDTO userDTO) {
+        log.info("MOCK"); //TODO: implement
+        /*send(UserMessage.builder()
                 .type(UserMessageType.CREATED)
                 .userDTO(userDTO)
-                .build());
+                .build());*/
     }
 
-    public void updateAccount(UserWithoutPasswordDTO userPublicDTO) {
+    public void updateAccount(UserKafkaDTO userPublicDTO) {
         send(UserMessage.builder()
                 .type(UserMessageType.UPDATED)
                 .userDTO(userPublicDTO)
                 .build());
     }
 
-    public void createConfirmationCode(ConfirmationCodeEntity codeEntity) {
-        send(UserMessage.builder()
-                .type(UserMessageType.CONFIRMATION_CODE_GENERATED)
-                .confirmationCodeDTO(MappingUtils.map(codeEntity, ConfirmationCodeDTO.class))
-                .build());
-    }
 
     public void organizationRegistered(EmailCredentialsDTO emailCredentialsDTO) {
         send(UserMessage.builder()

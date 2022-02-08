@@ -2,6 +2,7 @@ package ru.tsvlad.wayd_user.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.core.geo.GeoJsonModule;
@@ -21,5 +22,10 @@ public class ApplicationConfig {
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.registerModule(new GeoJsonModule());
         return objectMapper;
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }

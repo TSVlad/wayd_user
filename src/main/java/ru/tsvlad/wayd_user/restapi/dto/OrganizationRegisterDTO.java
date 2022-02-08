@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrganizationForRegisterDTO {
+public class OrganizationRegisterDTO {
     private String email;
     private String username;
 }

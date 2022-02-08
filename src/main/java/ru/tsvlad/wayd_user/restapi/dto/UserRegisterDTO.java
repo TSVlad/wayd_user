@@ -1,18 +1,17 @@
 package ru.tsvlad.wayd_user.restapi.dto;
 
 import lombok.Data;
-import ru.tsvlad.wayd_user.entity.RoleEntity;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Data
-public class UserForOwnerDTO {
-    private long id;
+public class UserRegisterDTO {
     private String username;
-    private List<RoleEntity> roles;
+    private String password;
     private String name;
     private String surname;
     private String description;
     private String contacts;
     private String email;
+    private LocalDate dateOfBirth;
 }

@@ -8,17 +8,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.tsvlad.wayd_user.enums.Role;
-import ru.tsvlad.wayd_user.service.RoleService;
 
 @RestController
 @RequestMapping("/role")
 @AllArgsConstructor
 public class RoleController {
-    private final RoleService roleService;
+//    private final RoleService roleService;
 
-    @PostMapping("/to-user/{id}")
+    /*@PostMapping("/to-user/{id}")
     public ResponseEntity<HttpStatus> giveModeratorRoleToUser(@PathVariable long id) {
         roleService.addRoleToUser(Role.ROLE_MODERATOR, id);
         return new ResponseEntity<>(HttpStatus.OK);
-    }
+    }*/
 }
