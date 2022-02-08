@@ -18,25 +18,16 @@ public class UserServiceProducer {
     private final KafkaTemplate<Long, UserMessage> userMessageKafkaTemplate;
 
     public void registerAccount(UserKafkaDTO userDTO) {
-        log.info("MOCK"); //TODO: implement
-        /*send(UserMessage.builder()
+        send(UserMessage.builder()
                 .type(UserMessageType.CREATED)
                 .userDTO(userDTO)
-                .build());*/
+                .build());
     }
 
     public void updateAccount(UserKafkaDTO userPublicDTO) {
         send(UserMessage.builder()
                 .type(UserMessageType.UPDATED)
                 .userDTO(userPublicDTO)
-                .build());
-    }
-
-
-    public void organizationRegistered(EmailCredentialsDTO emailCredentialsDTO) {
-        send(UserMessage.builder()
-                .type(UserMessageType.ORGANIZATION_REGISTERED)
-                .emailCredentialsDTO(emailCredentialsDTO)
                 .build());
     }
 

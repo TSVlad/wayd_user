@@ -5,8 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.tsvlad.wayd_user.enums.Role;
+import ru.tsvlad.wayd_user.enums.UserStatus;
 import ru.tsvlad.wayd_user.restapi.dto.RoleDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -22,4 +24,7 @@ public class UserKafkaDTO {
     private String description;
     private String contacts;
     private String email;
+
+    private LocalDate dateOfBirth;
+    private UserStatus status;
 }

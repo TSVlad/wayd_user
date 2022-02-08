@@ -22,6 +22,6 @@ public class ValidatorConsumer {
     }
 
     private void userValidated(ValidatorMessage validatorMessage) {
-//        userService.updateValidBadWords(validatorMessage.getUserId(), validatorMessage.getValidity());
+        userService.updateValidBadWords(validatorMessage.getUserId(), validatorMessage.getValidity());
     }
 }

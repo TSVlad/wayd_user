@@ -11,12 +11,14 @@ import ru.tsvlad.wayd_user.commons.User;
 import ru.tsvlad.wayd_user.commons.UserRegisterInfo;
 import ru.tsvlad.wayd_user.commons.UserUpdateInfo;
 import ru.tsvlad.wayd_user.commons.mapper.KeycloakMapper;
+import ru.tsvlad.wayd_user.enums.Role;
+import ru.tsvlad.wayd_user.enums.UserAttribute;
+import ru.tsvlad.wayd_user.enums.UserStatus;
+import ru.tsvlad.wayd_user.enums.Validity;
 import ru.tsvlad.wayd_user.messaging.dto.UserKafkaDTO;
 import ru.tsvlad.wayd_user.messaging.producer.UserServiceProducer;
-import ru.tsvlad.wayd_user.restapi.dto.UserPublicDTO;
 import ru.tsvlad.wayd_user.service.KeycloakService;
 import ru.tsvlad.wayd_user.service.UserService;
-import ru.tsvlad.wayd_user.utils.MappingUtils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -80,85 +82,32 @@ public class UserServiceImpl implements UserService {
     public User updateUser(UserUpdateInfo userUpdateInfo) {
         UserRepresentation userRepresentation = keycloakService.updateUser(userUpdateInfo);
         User user = keycloakMapper.toUser(userRepresentation);
+        userServiceProducer.updateAccount(modelMapper.map(user, UserKafkaDTO.class));
         return user;
-
-        /*Optional<UserEntity> userEntityOptional = userRepository.findById(userDTO.getId());
-        if (userEntityOptional.isEmpty()) {
-            throw new NotFoundException();
-        }
-        UserEntity userEntity = userEntityOptional.get();
-
-        if (userEntity.getStatus() == UserStatus.NOT_APPROVED_EMAIL
-                || userEntity.getStatus() == UserStatus.NOT_APPROVED_BY_MODERATOR) {
-            throw new ForbiddenException();
-        }
-
-        userEntity.updateUser(userDTO);
-        UserEntity result = userRepository.save(userEntity);
-        userServiceProducer.updateAccount(MappingUtils.map(result, UserKafkaDTO.class));
-        return MappingUtils.map(result, UserForOwnerDTO.class);*/
-    }
-
-    /*@Override
-    @Transactional
-    public boolean confirmEmail(ConfirmationCodeDTO codeDTO) {
-        boolean success = confirmationCodeService.confirm(codeDTO);
-        if (success) {
-            UserEntity userEntity = userRepository.findByEmail(codeDTO.getEmail());
-            userEntity.confirmEmail();
-            userRepository.save(userEntity);
-
-        }
-        return success;
     }
 
     @Override
     @Transactional
-    public void updateValidBadWords(long id, Validity validity) {
-        try {
-            Optional<UserEntity> userEntityOptional = userRepository.findById(id);
-            if (userEntityOptional.isEmpty()) {
-                throw new NotFoundException();
-            }
-            UserEntity userEntity = userEntityOptional.get();
-            userEntity.updateValidBadWords(validity);
-            userRepository.save(userEntity);
-        } catch (OptimisticLockingFailureException exception) {
-            updateValidBadWords(id, validity);
+    public void updateValidBadWords(String id, Validity validity) {
+        UserRepresentation user = keycloakService.getUserById(id);
+        if (validity == Validity.VALID
+                && user.getAttributes().get(UserAttribute.status).get(0).equals(UserStatus.ON_VALIDATION.name())) {
+            keycloakService.updateUserStatus(id, UserStatus.ACTIVE);
+        } else if (validity == Validity.NOT_VALID
+                && user.getAttributes().get(UserAttribute.status).get(0).equals(UserStatus.ON_VALIDATION.name())) {
+            keycloakService.updateUserStatus(id, UserStatus.INVALID_BAD_WORDS);
         }
     }
 
     @Override
     @Transactional
-    public void banUser(long userId) {
-        UserEntity userEntity = getUserById(userId);
-        userEntity.ban();
-        userRepository.save(userEntity);
+    public void banUser(String userId) {
+        keycloakService.setUserEnabled(userId, false);
     }
 
     @Override
     @Transactional
-    public void unbanUser(long userId) {
-        UserEntity userEntity = getUserById(userId);
-        userEntity.unban();
-        userRepository.save(userEntity);
+    public void unbanUser(String userId) {
+        keycloakService.setUserEnabled(userId, true);
     }
-
-    @Override
-    @Transactional
-    public void addRoleToUser(long userId, Role role) {
-        UserEntity userEntity = getUserById(userId);
-        userEntity.getRoles().add(roleService.getRoleEntityByName(role));
-        userRepository.save(userEntity);
-    }
-
-    @Override
-    @Transactional
-    public void deleteRoleFromUser(long userId, Role role) {
-        UserEntity userEntity = getUserById(userId);
-        userEntity.getRoles().remove(roleService.getRoleEntityByName(role));
-        userRepository.save(userEntity);
-    }
-*/
-
 }

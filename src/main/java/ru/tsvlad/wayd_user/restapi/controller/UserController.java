@@ -5,12 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.tsvlad.wayd_user.commons.OrganizationRegisterInfo;
 import ru.tsvlad.wayd_user.commons.UserRegisterInfo;
 import ru.tsvlad.wayd_user.commons.UserUpdateInfo;
+import ru.tsvlad.wayd_user.enums.Role;
 import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.ForbiddenException;
 import ru.tsvlad.wayd_user.restapi.dto.*;
 import ru.tsvlad.wayd_user.service.AuthenticationService;
@@ -80,16 +82,4 @@ public class UserController {
     public UserPublicDTO getUserById(@PathVariable String id) {
         return modelMapper.map(userService.getUserById(id), UserPublicDTO.class);
     }
-
-    /*@PostMapping("/{id}/role")
-    public ResponseEntity<HttpStatus> addRoleToUser(@PathVariable long id, @RequestBody Role role) {
-        userService.addRoleToUser(id, role);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @DeleteMapping("/{id}/role")
-    public ResponseEntity<HttpStatus> deleteRoleFromUser(@PathVariable long id, @RequestBody Role role) {
-        userService.deleteRoleFromUser(id, role);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }*/
 }

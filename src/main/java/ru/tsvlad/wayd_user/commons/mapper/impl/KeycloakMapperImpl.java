@@ -6,7 +6,9 @@ import ru.tsvlad.wayd_user.commons.User;
 import ru.tsvlad.wayd_user.commons.mapper.KeycloakMapper;
 import ru.tsvlad.wayd_user.enums.Role;
 import ru.tsvlad.wayd_user.enums.UserAttribute;
+import ru.tsvlad.wayd_user.enums.UserStatus;
 
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +34,8 @@ public class KeycloakMapperImpl implements KeycloakMapper {
                 .contacts(attributes.get(UserAttribute.contacts) != null ?
                         attributes.get(UserAttribute.contacts).get(0)
                         : null)
+                .dateOfBirth(LocalDate.parse(attributes.get(UserAttribute.dateOfBirth).get(0)))
+                .status(UserStatus.valueOf(attributes.get(UserAttribute.status).get(0)))
                 .build();
     }
 }

@@ -53,7 +53,7 @@ public class KeycloakServiceImpl implements KeycloakService {
 
         UserRepresentation result = userResource.toRepresentation();
         //adding roles, because roles is always (?) null in representation
-        result.setRealmRoles(result.getRealmRoles());
+        result.setRealmRoles(getRealmRolesForUser(result.getId()));
         return result;
     }
 
@@ -109,6 +109,22 @@ public class KeycloakServiceImpl implements KeycloakService {
         UserRepresentation userRepresentation = realm().users().get(id).toRepresentation();
         userRepresentation.setRealmRoles(getRealmRolesForUser(id));
         return userRepresentation;
+    }
+
+    @Override
+    public void updateUserStatus(String id, UserStatus status) {
+        UserResource userResource = realm().users().get(id);
+        UserRepresentation userRepresentation = userResource.toRepresentation();
+        userRepresentation.singleAttribute(UserAttribute.status, status.name());
+        userResource.update(userRepresentation);
+    }
+
+    @Override
+    public void setUserEnabled(String id, boolean isEnabled) {
+        UserResource userResource = realm().users().get(id);
+        UserRepresentation userRepresentation = userResource.toRepresentation();
+        userRepresentation.setEnabled(isEnabled);
+        userResource.update(userRepresentation);
     }
 
     private UserRepresentation updateUserFields(UserRepresentation userRepresentation, UserUpdateInfo userUpdateInfo) {
