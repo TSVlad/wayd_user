@@ -17,7 +17,7 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:9999/eureka/
-    enabled: true
+    enabled: false
 
 keycloak:
   enabled: true
