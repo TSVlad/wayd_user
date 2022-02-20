@@ -133,6 +133,7 @@ public class KeycloakServiceImpl implements KeycloakService {
         userRepresentation.singleAttribute(UserAttribute.description, userUpdateInfo.getDescription());
         userRepresentation.singleAttribute(UserAttribute.contacts, userUpdateInfo.getContacts());
         userRepresentation.singleAttribute(UserAttribute.status, UserStatus.ON_VALIDATION.name());
+        userRepresentation.singleAttribute(UserAttribute.avatar, userUpdateInfo.getAvatar());
         return userRepresentation;
     }
 
@@ -195,6 +196,7 @@ public class KeycloakServiceImpl implements KeycloakService {
         userRepresentation.singleAttribute(UserAttribute.status, UserStatus.ON_VALIDATION.name());
         userRepresentation.singleAttribute(UserAttribute.description, userRegisterInfo.getDescription());
         userRepresentation.singleAttribute(UserAttribute.contacts, userRegisterInfo.getContacts());
+        userRepresentation.singleAttribute(UserAttribute.avatar, userRegisterInfo.getAvatar());
         userRepresentation.setEnabled(true);
         return userRepresentation;
     }

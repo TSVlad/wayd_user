@@ -14,4 +14,5 @@ public class UserRegisterInfo {
     private String contacts;
     private String email;
     private LocalDate dateOfBirth;
+    private String avatar;
 }

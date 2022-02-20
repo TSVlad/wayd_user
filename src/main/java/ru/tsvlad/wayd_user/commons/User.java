@@ -23,7 +23,7 @@ public class User {
     private String description;
     private String contacts;
     private String email;
-
+    private String avatar;
     private LocalDate dateOfBirth;
     private UserStatus status;
 }

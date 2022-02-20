@@ -9,4 +9,5 @@ public class UserUpdateInfo {
     private String surname;
     private String contacts;
     private String description;
+    private String avatar;
 }

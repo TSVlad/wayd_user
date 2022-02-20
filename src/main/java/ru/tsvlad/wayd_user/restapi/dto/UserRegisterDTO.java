@@ -14,4 +14,5 @@ public class UserRegisterDTO {
     private String contacts;
     private String email;
     private LocalDate dateOfBirth;
+    private String avatar;
 }
