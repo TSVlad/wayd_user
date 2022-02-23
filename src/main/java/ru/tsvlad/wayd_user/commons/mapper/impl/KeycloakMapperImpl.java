@@ -28,10 +28,10 @@ public class KeycloakMapperImpl implements KeycloakMapper {
                         : Collections.emptyList())
                 .name(userRepresentation.getFirstName())
                 .surname(userRepresentation.getLastName())
-                .description(attributes.get(UserAttribute.description) != null ?
+                .description(attributes.get(UserAttribute.description) != null && !attributes.get(UserAttribute.description).isEmpty()?
                         attributes.get(UserAttribute.description).get(0)
                         : null)
-                .contacts(attributes.get(UserAttribute.contacts) != null ?
+                .contacts(attributes.get(UserAttribute.contacts) != null && !attributes.get(UserAttribute.contacts).isEmpty()?
                         attributes.get(UserAttribute.contacts).get(0)
                         : null)
                 .dateOfBirth(LocalDate.parse(attributes.get(UserAttribute.dateOfBirth).get(0)))
