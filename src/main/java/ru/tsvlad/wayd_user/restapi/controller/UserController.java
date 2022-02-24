@@ -5,14 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.tsvlad.wayd_user.commons.OrganizationRegisterInfo;
 import ru.tsvlad.wayd_user.commons.UserRegisterInfo;
 import ru.tsvlad.wayd_user.commons.UserUpdateInfo;
-import ru.tsvlad.wayd_user.enums.Role;
 import ru.tsvlad.wayd_user.restapi.controller.advise.exceptions.ForbiddenException;
 import ru.tsvlad.wayd_user.restapi.dto.*;
 import ru.tsvlad.wayd_user.service.AuthenticationService;
@@ -64,10 +62,9 @@ public class UserController {
         );
     }
 
-    @GetMapping("/for-username/{username}/{pageNumber}/{pageSize}")
-    public Page<UserPublicDTO> getAllByUsername(@PathVariable String username, @PathVariable int pageNumber,
-                                                @PathVariable int pageSize) {
-        return userService.getAllActiveByUsername(username, pageNumber, pageSize)
+    @GetMapping
+    public Page<UserPublicDTO> getAll(@RequestParam(required = false, defaultValue = "") String searchString, @RequestParam int page, @RequestParam int size) {
+        return userService.getAllActiveByUsername(searchString, page, size)
                 .map(user -> modelMapper.map(user, UserPublicDTO.class));
     }
 
