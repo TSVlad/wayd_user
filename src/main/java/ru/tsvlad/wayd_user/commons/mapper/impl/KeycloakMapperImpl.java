@@ -34,7 +34,7 @@ public class KeycloakMapperImpl implements KeycloakMapper {
                 .contacts(attributes.get(UserAttribute.contacts) != null && !attributes.get(UserAttribute.contacts).isEmpty()?
                         attributes.get(UserAttribute.contacts).get(0)
                         : null)
-                .dateOfBirth(LocalDate.parse(attributes.get(UserAttribute.dateOfBirth).get(0)))
+                .dateOfBirth(attributes.get(UserAttribute.dateOfBirth) != null? LocalDate.parse(attributes.get(UserAttribute.dateOfBirth).get(0)) : null)
                 .status(UserStatus.valueOf(attributes.get(UserAttribute.status).get(0)))
                 .avatar(attributes.get(UserAttribute.avatar) != null && !attributes.get(UserAttribute.avatar).isEmpty()?
                         attributes.get(UserAttribute.avatar).get(0)
