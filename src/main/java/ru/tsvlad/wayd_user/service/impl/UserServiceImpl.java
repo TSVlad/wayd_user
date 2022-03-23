@@ -63,18 +63,7 @@ public class UserServiceImpl implements UserService {
     public User registerOrganization(OrganizationRegisterInfo organizationRegisterInfo) {
         UserRepresentation userRepresentation = keycloakService.addOrganization(organizationRegisterInfo);
         User result = keycloakMapper.toUser(userRepresentation);
-        //TODO: producer
         return result;
-
-        /*UserEntity userEntity = UserEntity.registerOrganization(organizationRegisterDTO, password, roleService);
-        UserEntity result = userRepository.save(userEntity);
-        userServiceProducer.organizationRegistered(EmailCredentialsDTO.builder()
-                .userId(result.getId())
-                .email(userEntity.getEmail())
-                .username(userEntity.getUsername())
-                .password(password)
-                .build());
-        return MappingUtils.map(result, UserDTO.class);*/
     }
 
     @Override

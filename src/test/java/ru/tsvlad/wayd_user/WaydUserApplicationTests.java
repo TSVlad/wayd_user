@@ -9,5 +9,4 @@ class WaydUserApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }

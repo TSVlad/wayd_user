@@ -1,7 +1,7 @@
 package ru.tsvlad.wayd_user.config.security;
 
 import lombok.RequiredArgsConstructor;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
+import org.keycloak.adapters.KeycloakConfigResolver;
 import org.keycloak.adapters.KeycloakDeployment;
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.keycloak.admin.client.Keycloak;
@@ -13,11 +13,10 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class KeycloakAdminClientConfig {
 
-    private final KeycloakSpringBootConfigResolver keycloakSpringBootConfigResolver;
-
     @Bean
     public Keycloak keycloak() {
-        KeycloakDeployment keycloakDeployment = keycloakSpringBootConfigResolver.resolve(null);
+        KeycloakDeployment keycloakDeployment = keycloakConfigResolver().resolve(null);
+
 
         return KeycloakBuilder.builder()
                 .grantType("client_credentials")
@@ -26,5 +25,10 @@ public class KeycloakAdminClientConfig {
                 .clientId(keycloakDeployment.getResourceName())
                 .clientSecret((String)keycloakDeployment.getResourceCredentials().get("secret"))
                 .build();
+    }
+
+    @Bean
+    public KeycloakConfigResolver keycloakConfigResolver() {
+        return new KeycloakSpringBootConfigResolver();
     }
 }

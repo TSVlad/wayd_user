@@ -33,6 +33,7 @@ public class UserController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDTO registerUser(@RequestBody UserRegisterDTO userDTO) {
+        log.debug("Register user request gotten");
         return modelMapper.map(
                 userService.registerUser(modelMapper.map(userDTO, UserRegisterInfo.class)), UserDTO.class
         );
@@ -41,6 +42,7 @@ public class UserController {
     @Secured("ROLE_MODERATOR")
     @PostMapping("/register/organization")
     public UserDTO registerOrganization(@RequestBody OrganizationRegisterDTO organizationRegisterDTO) {
+        log.debug("Register organization request gotten for {}", organizationRegisterDTO);
         return modelMapper.map(
                 userService.registerOrganization(modelMapper.map(organizationRegisterDTO, OrganizationRegisterInfo.class)),
                 UserDTO.class
@@ -52,6 +54,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public UserDTO updateUser(@RequestBody UserForUpdateDTO userForUpdateDTO,
                               Authentication authentication) {
+        log.debug("Update user request gotten: {}", userForUpdateDTO);
         String userId = authenticationService.getUserId(authentication);
         if (!userId.equals(userForUpdateDTO.getId())) {
             throw new ForbiddenException();
@@ -64,12 +67,14 @@ public class UserController {
 
     @GetMapping
     public Page<UserPublicDTO> getAll(@RequestParam(required = false, defaultValue = "") String searchString, @RequestParam int page, @RequestParam int size) {
+        log.debug("Get all users request gotten: page {}, size{}", page, size);
         return userService.getAllActiveByUsername(searchString, page, size)
                 .map(user -> modelMapper.map(user, UserPublicDTO.class));
     }
 
     @PostMapping("/by-ids")
     public List<UserPublicDTO> getAllByIds(@RequestBody List<String> ids) {
+        log.debug("Get all users by ids request gotten: ids {}", ids);
         return userService.getAllByIds(ids).stream()
                 .map(user -> modelMapper.map(user, UserPublicDTO.class))
                 .collect(Collectors.toList());
@@ -77,6 +82,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public UserPublicDTO getUserById(@PathVariable String id) {
+        log.debug("Get user by id request gotten: id {}", id);
         return modelMapper.map(userService.getUserById(id), UserPublicDTO.class);
     }
 }

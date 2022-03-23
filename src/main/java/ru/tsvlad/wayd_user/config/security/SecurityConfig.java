@@ -23,11 +23,6 @@ import org.springframework.security.web.authentication.session.SessionAuthentica
 @AllArgsConstructor
 public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
-    @Bean
-    public KeycloakConfigResolver keycloakConfigResolver() {
-        return new KeycloakSpringBootConfigResolver();
-    }
-
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) {
         KeycloakAuthenticationProvider keycloakAuthenticationProvider = keycloakAuthenticationProvider();
