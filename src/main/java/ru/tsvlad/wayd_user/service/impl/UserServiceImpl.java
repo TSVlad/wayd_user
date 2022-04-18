@@ -50,7 +50,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public User registerUser(UserRegisterInfo userRegisterInfo) {
         UserRepresentation userRepresentation = keycloakService.addUser(userRegisterInfo);
         User result = keycloakMapper.toUser(userRepresentation);
@@ -59,7 +58,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public User registerOrganization(OrganizationRegisterInfo organizationRegisterInfo) {
         UserRepresentation userRepresentation = keycloakService.addOrganization(organizationRegisterInfo);
         User result = keycloakMapper.toUser(userRepresentation);
@@ -67,7 +65,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public User updateUser(UserUpdateInfo userUpdateInfo) {
         UserRepresentation userRepresentation = keycloakService.updateUser(userUpdateInfo);
         User user = keycloakMapper.toUser(userRepresentation);
@@ -76,7 +73,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void updateValidBadWords(String id, Validity validity) {
         UserRepresentation user = keycloakService.getUserById(id);
         if (validity == Validity.VALID
@@ -89,13 +85,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional
     public void banUser(String userId) {
         keycloakService.setUserEnabled(userId, false);
     }
 
     @Override
-    @Transactional
     public void unbanUser(String userId) {
         keycloakService.setUserEnabled(userId, true);
     }

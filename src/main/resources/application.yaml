@@ -1,8 +1,8 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5433/wayd_user
-    username: root
-    password: root
+#  datasource:
+#    url: jdbc:postgresql://localhost:5433/wayd_user
+#    username: root
+#    password: root
   application:
     name: wayd-user
 
@@ -32,7 +32,7 @@ wayd:
     address: localhost:9092
     groupId: user
     producer:
-      id: validator-producer
+      id: user-producer
   confirmation-code:
     duration: 15
     length: 6
